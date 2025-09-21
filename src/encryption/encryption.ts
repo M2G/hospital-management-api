@@ -11,7 +11,6 @@ function comparePassword(password: string, encodedPassword: string): boolean {
 
 function validatePassword(endcodedPassword: string): (password: string) => boolean {
   return function (password: string) {
-    console.log("validatePassword", { password, endcodedPassword })
     return comparePassword(password, endcodedPassword);
   };
 }
