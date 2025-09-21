@@ -1,135 +1,335 @@
-import type { TestingModule } from '@nestjs/testing';
-import { Test } from '@nestjs/testing';
-import type { MockProxy } from 'jest-mock-extended';
-import { mock } from 'jest-mock-extended';
+import { Test, TestingModule } from '@nestjs/testing';
+import { MockProxy, mock } from 'jest-mock-extended';
 import { UserService } from '@domain/services';
 import { UsersRepository } from '@infrastructure/repository';
-import userData from 'tests/mocks/userData.mock';
-import { mockRedis } from 'tests/mocks/redis-mock';
-import { REDIS_CLIENT } from 'src/config/redis-client.type';
-import { mockService } from 'tests/mocks';
+import { UserTypeResultData } from '@domain/interfaces';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  ForgotPasswordDTO,
+  ResetPasswordDTO,
+  ChangePasswordDTO,
+  AuthenticateDto,
+} from '@application/dto';
 
-const oneDayInSeconds = 60;
+describe('UserService', () => {
+  let service: UserService;
+  let usersRepository: MockProxy<UsersRepository>;
 
-describe('RedisService', () => {
-  let testingModule: TestingModule;
-  let userService: UserService;
+  const mockUserData: UserTypeResultData = {
+    id: 1,
+    email: 'test@example.com',
+    first_name: 'John',
+    last_name: 'Doe',
+    created_at: new Date(),
+    modified_at: new Date(),
+    deleted_at: 0,
+    last_connected_at: 0,
+    reset_password_expires: '',
+    reset_password_token: null,
+  };
 
-  const userRepositoryMock: MockProxy<UsersRepository> = mock();
+  const mockPaginationResult = {
+    pageInfo: {
+      count: 1,
+      next: null,
+      pages: 1,
+      prev: null,
+    },
+    results: [mockUserData],
+  };
 
-  beforeAll(async () => {
-    testingModule = await Test.createTestingModule({
-      imports: [
-        /*
-        SequelizeModule.forRoot({
-          autoLoadModels: true,
-          database: 'test_db',
-          dialect: 'postgres',
-          host: 'postgres',
-          password: 'postgres',
-          port: 5432,
-          synchronize: true,
-          username: 'postgres',
-        }),
-        UserModule,
-        */
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        UserService,
+        {
+          provide: UsersRepository,
+          useValue: mock<UsersRepository>(),
+        },
       ],
-      providers: [UserService as any, mockService(UsersRepository, userRepositoryMock)],
-    })
-      .overrideProvider(REDIS_CLIENT)
-      .useValue(mockRedis)
-      .compile();
+    }).compile();
 
-    userService = testingModule.get<UserService>(UserService) as any;
+    service = module.get<UserService>(UserService);
+    usersRepository = module.get<UsersRepository>(UsersRepository) as MockProxy<UsersRepository>;
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await testingModule.close();
-  });
+  describe('find', () => {
+    it('should return paginated users with filters', async () => {
+      // Arrange
+      const filters = 'email:test@example.com';
+      const page = 1;
+      const pageSize = 10;
+      usersRepository.find.mockResolvedValue(mockPaginationResult);
 
-  it('should successfully find user', async () => {
-    userRepositoryMock.findOne.mockResolvedValue(userData);
-    const userId = 1;
-    const result = await userService.findOne({ id: userId });
-    expect(result).toEqual(userData);
-    expect(userRepositoryMock.findOne).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.findOne).toHaveBeenCalledWith({ id: userId });
-  });
+      // Act
+      const result = await service.find({ filters, page, pageSize });
 
-  it('should successfully create user', async () => {
-    userRepositoryMock.register.mockResolvedValue(userData as unknown as never);
-    const result = await userService.register(userData);
-    expect(result).toEqual(userData);
-    expect(userRepositoryMock.register).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.register).toHaveBeenCalledWith(userData);
-  });
-
-  it('should successfully remove user', async () => {
-    const userId = 1;
-    userRepositoryMock.remove.mockResolvedValue(1 as unknown as any);
-    const result = await userService.remove({ id: userId });
-    expect(result).toEqual(1);
-    expect(userRepositoryMock.remove).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.remove).toHaveBeenCalledWith({ id: userId });
-  });
-
-  it('should successfully update user', async () => {
-    userRepositoryMock.update.mockResolvedValue(userData as unknown as never);
-    const result = await userService.update(userData);
-    expect(result).toEqual(userData);
-    expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.update).toHaveBeenCalledWith(userData);
-  });
-
-  it('should successfully authenticate user', async () => {
-    userRepositoryMock.authenticate.mockResolvedValue(userData);
-    const result = await userService.authenticate({ email: userData.email });
-    expect(result).toEqual(userData);
-    expect(userRepositoryMock.authenticate).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.authenticate).toHaveBeenCalledWith({ email: userData.email });
-  });
-
-  it('should successfully changePassword user', async () => {
-    userRepositoryMock.changePassword.mockResolvedValue(userData);
-    const result = await userService.changePassword({
-      id: userData.id,
-      old_password: userData.password,
-      password: userData.password,
+      // Assert
+      expect(result).toEqual(mockPaginationResult);
+      expect(usersRepository.find).toHaveBeenCalledWith({ filters, page, pageSize });
+      expect(usersRepository.find).toHaveBeenCalledTimes(1);
     });
-    expect(result).toEqual(userData);
-    expect(userRepositoryMock.changePassword).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.changePassword).toHaveBeenCalledWith({
-      id: userData.id,
-      old_password: userData.password,
-      password: userData.password,
+
+    it('should handle empty results', async () => {
+      // Arrange
+      const emptyResult = {
+        pageInfo: {
+          count: 0,
+          next: null,
+          pages: 0,
+          prev: null,
+        },
+        results: [],
+      };
+      usersRepository.find.mockResolvedValue(emptyResult);
+
+      // Act
+      const result = await service.find({ filters: '', page: 1, pageSize: 10 });
+
+      // Assert
+      expect(result).toEqual(emptyResult);
+      expect(usersRepository.find).toHaveBeenCalledWith({ filters: '', page: 1, pageSize: 10 });
+    });
+
+    it('should handle repository errors', async () => {
+      // Arrange
+      const error = new Error('Database connection failed');
+      usersRepository.find.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.find({ filters: '', page: 1, pageSize: 10 })).rejects.toThrow('Database connection failed');
     });
   });
 
-  it('should successfully forgotPassword user', async () => {
-    userRepositoryMock.forgotPassword.mockResolvedValue(userData);
-    const result = await userService.forgotPassword({ email: userData.email });
-    expect(result).toEqual(userData);
-    expect(userRepositoryMock.forgotPassword).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.forgotPassword).toHaveBeenCalledWith({
-      email: userData.email,
-    } as any);
+  describe('findOne', () => {
+    it('should return user by id', async () => {
+      // Arrange
+      const userId = 1;
+      usersRepository.findOne.mockResolvedValue(mockUserData);
+
+      // Act
+      const result = await service.findOne(userId);
+
+      // Assert
+      expect(result).toEqual(mockUserData);
+      expect(usersRepository.findOne).toHaveBeenCalledWith(userId);
+      expect(usersRepository.findOne).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return null when user not found', async () => {
+      // Arrange
+      const userId = 999;
+      usersRepository.findOne.mockResolvedValue(null);
+
+      // Act
+      const result = await service.findOne(userId);
+
+      // Assert
+      expect(result).toBeNull();
+      expect(usersRepository.findOne).toHaveBeenCalledWith(userId);
+    });
+
+    it('should handle repository errors', async () => {
+      // Arrange
+      const userId = 1;
+      const error = new Error('Database error');
+      usersRepository.findOne.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.findOne(userId)).rejects.toThrow('Database error');
+    });
   });
 
-  it('should successfully resetPassword user', async () => {
-    userRepositoryMock.resetPassword.mockResolvedValue(userData);
-    const result = await userService.resetPassword({
-      password: userData.password,
-      reset_password_token: 'test',
+  describe('create', () => {
+    it('should create new user successfully', async () => {
+      // Arrange
+      const createUserDto: CreateUserDto = {
+        email: 'newuser@example.com',
+        password: 'password123',
+      };
+      usersRepository.create.mockResolvedValue(mockUserData);
+
+      // Act
+      const result = await service.create(createUserDto);
+
+      // Assert
+      expect(result).toEqual(mockUserData);
+      expect(usersRepository.create).toHaveBeenCalledWith(createUserDto);
+      expect(usersRepository.create).toHaveBeenCalledTimes(1);
     });
-    expect(result).toEqual(userData);
-    expect(userRepositoryMock.resetPassword).toHaveBeenCalledTimes(1);
-    expect(userRepositoryMock.resetPassword).toHaveBeenCalledWith({
-      password: userData.password,
-      reset_password_token: 'test',
-    } as any);
+
+    it('should handle creation errors', async () => {
+      // Arrange
+      const createUserDto: CreateUserDto = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+      const error = new Error('Email already exists');
+      usersRepository.create.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.create(createUserDto)).rejects.toThrow('Email already exists');
+    });
+  });
+
+  describe('update', () => {
+    it('should update user successfully', async () => {
+      // Arrange
+      const userId = 1;
+      const updateUserDto: UpdateUserDto = {
+        first_name: 'Jane',
+        last_name: 'Smith',
+      };
+      const updatedUser = { ...mockUserData, ...updateUserDto };
+      usersRepository.update.mockResolvedValue(updatedUser);
+
+      // Act
+      const result = await service.update(userId, updateUserDto);
+
+      // Assert
+      expect(result).toEqual(updatedUser);
+      expect(usersRepository.update).toHaveBeenCalledWith(userId, updateUserDto);
+      expect(usersRepository.update).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle update errors', async () => {
+      // Arrange
+      const userId = 1;
+      const updateUserDto: UpdateUserDto = {
+        first_name: 'Jane',
+      };
+      const error = new Error('User not found');
+      usersRepository.update.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.update(userId, updateUserDto)).rejects.toThrow('User not found');
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete user successfully', async () => {
+      // Arrange
+      const userId = 1;
+      usersRepository.remove.mockResolvedValue(true);
+
+      // Act
+      const result = await service.remove(userId);
+
+      // Assert
+      expect(result).toBe(true);
+      expect(usersRepository.remove).toHaveBeenCalledWith(userId);
+      expect(usersRepository.remove).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle deletion errors', async () => {
+      // Arrange
+      const userId = 1;
+      const error = new Error('User not found');
+      usersRepository.remove.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.remove(userId)).rejects.toThrow('User not found');
+    });
+  });
+
+  describe('forgotPassword', () => {
+    it('should handle forgot password successfully', async () => {
+      // Arrange
+      const forgotPasswordDto: ForgotPasswordDTO = {
+        email: 'test@example.com',
+      };
+      usersRepository.forgotPassword.mockResolvedValue(true);
+
+      // Act
+      const result = await service.forgotPassword(forgotPasswordDto);
+
+      // Assert
+      expect(result).toBe(true);
+      expect(usersRepository.forgotPassword).toHaveBeenCalledWith(forgotPasswordDto);
+      expect(usersRepository.forgotPassword).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle forgot password errors', async () => {
+      // Arrange
+      const forgotPasswordDto: ForgotPasswordDTO = {
+        email: 'nonexistent@example.com',
+      };
+      const error = new Error('User not found');
+      usersRepository.forgotPassword.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.forgotPassword(forgotPasswordDto)).rejects.toThrow('User not found');
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should reset password successfully', async () => {
+      // Arrange
+      const resetPasswordDto: ResetPasswordDTO = {
+        token: 'valid-token',
+        password: 'newpassword123',
+      };
+      usersRepository.resetPassword.mockResolvedValue(true);
+
+      // Act
+      const result = await service.resetPassword(resetPasswordDto);
+
+      // Assert
+      expect(result).toBe(true);
+      expect(usersRepository.resetPassword).toHaveBeenCalledWith(resetPasswordDto);
+      expect(usersRepository.resetPassword).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle reset password errors', async () => {
+      // Arrange
+      const resetPasswordDto: ResetPasswordDTO = {
+        token: 'invalid-token',
+        password: 'newpassword123',
+      };
+      const error = new Error('Invalid or expired token');
+      usersRepository.resetPassword.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.resetPassword(resetPasswordDto)).rejects.toThrow('Invalid or expired token');
+    });
+  });
+
+  describe('changePassword', () => {
+    it('should change password successfully', async () => {
+      // Arrange
+      const userId = 1;
+      const changePasswordDto: ChangePasswordDTO = {
+        currentPassword: 'oldpassword',
+        newPassword: 'newpassword123',
+      };
+      usersRepository.changePassword.mockResolvedValue(true);
+
+      // Act
+      const result = await service.changePassword(userId, changePasswordDto);
+
+      // Assert
+      expect(result).toBe(true);
+      expect(usersRepository.changePassword).toHaveBeenCalledWith(userId, changePasswordDto);
+      expect(usersRepository.changePassword).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle change password errors', async () => {
+      // Arrange
+      const userId = 1;
+      const changePasswordDto: ChangePasswordDTO = {
+        currentPassword: 'wrongpassword',
+        newPassword: 'newpassword123',
+      };
+      const error = new Error('Current password is incorrect');
+      usersRepository.changePassword.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(service.changePassword(userId, changePasswordDto)).rejects.toThrow('Current password is incorrect');
+    });
   });
 });
