@@ -16,7 +16,17 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/jest/bin/jest --runInBand",
-    "test:e2e": "jest --config tests/jest-e2e.json"
+    "test:e2e": "jest --config tests/jest-e2e.json",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/inte",
+    "test:unit:watch": "jest tests/unit --watch",
+    "test:integration:watch": "jest tests/inte --watch",
+    "test:unit:cov": "jest tests/unit --coverage",
+    "test:integration:cov": "jest tests/inte --coverage",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test:all:cov": "npm run test:unit:cov && npm run test:integration:cov && npm run test:e2e",
+    "test:ci": "npm run test:all:cov -- --ci --coverage --watchAll=false",
+    "test:run": "./tests/scripts/run-tests.sh"
   },
   "dependencies": {
     "@babel/core": "^7.28.3",
