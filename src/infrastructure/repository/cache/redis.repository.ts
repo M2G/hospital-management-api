@@ -10,7 +10,7 @@ class RedisRepository implements OnModuleDestroy, ICacheRepository {
    * Close redis connection on shutdown
    */
   onModuleDestroy() {
-    void this.redis.disconnect();
+    void this.redis.quit();
   }
 
   scanIterator(keyMatch: string): AsyncIterable<string[], void, unknown> {
@@ -20,7 +20,7 @@ class RedisRepository implements OnModuleDestroy, ICacheRepository {
     });
   }
 
-  get(key: string[]): Promise<string | null> {
+  get(key: string): Promise<string | null> {
     return this.redis.get(key);
   }
 
