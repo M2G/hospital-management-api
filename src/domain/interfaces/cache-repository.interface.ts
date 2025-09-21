@@ -1,5 +1,5 @@
 interface ICacheRepository {
-  get: (key: string[]) => Promise<string | null>;
+  get: (key: string) => Promise<string | null>;
   set: (key: string, value: string) => void;
   delete: (key: string) => Promise<void>;
   setWithExpiry: (key: string, value: string, expiry: number) => void;
