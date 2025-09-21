@@ -1,26 +1,37 @@
 #
-# Docker NodeJS Typescript Starter
-# Example Dockerfile
+# Docker NodeJS TypeScript Production-Ready Configuration
 #
-FROM node:24.2.0-alpine3.21 AS build
+ARG NODE_VERSION=24.2.0
+ARG ALPINE_VERSION=3.21
 
-## Install build toolchain, install node deps and compile native add-ons
-## https://stackoverflow.com/questions/70852805/bcrypt-error-in-docker-container-error-path-to-local-module-node-modules-bcry
-RUN apk add --no-cache make gcc g++ && \
-    npm rebuild bcrypt --build-from-source && \
-    apk del make gcc g++
+# Build stage - Compile TypeScript and install dependencies
+FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS build
 
-# Create App dir
-RUN mkdir -p /app
+# Install security updates and build dependencies
+RUN apk update && apk upgrade && \
+    apk add --no-cache --virtual .build-deps \
+    make \
+    gcc \
+    g++ \
+    python3 \
+    && rm -rf /var/cache/apk/*
 
 # Set working directory to App dir
 WORKDIR /app
 
-# Copy project files
+# Copy package files first for better caching
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install dependencies (including dev dependencies for build)
+RUN npm ci --only=production=false && \
+    npm cache clean --force
+
+# Copy source code
 COPY . .
 
-# Create environment file
-RUN cp .env.example .env
+# Create environment file if it doesn't exist
+RUN [ -f .env ] || cp .env.example .env || echo "# Environment variables" > .env
 
 # Install dependencies
 RUN npm install
@@ -33,3 +44,8 @@ COPY --from=build /app .
 WORKDIR /app
 
 CMD [ "/app/scripts/run.sh" ]
+
+# Remove dev dependencies and clean up
+RUN #npm prune --production && \
+    npm cache clean --force && \
+    apk del .build-deps
