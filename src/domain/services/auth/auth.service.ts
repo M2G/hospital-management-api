@@ -1,5 +1,5 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto, LoginDto } from '@application/dto';
+import { CreateUserDto, LoginDto } from '@application/dto';
 import { AuthRepository } from '@infrastructure/repository';
 import { User } from '@infrastructure/models';
 
