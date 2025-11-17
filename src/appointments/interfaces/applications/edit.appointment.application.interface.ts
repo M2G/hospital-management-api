@@ -1,6 +1,6 @@
-import { PartialUser } from "src/users/domain/partial.user.domain";
-import { UserDomain } from "src/users/domain/user.domain";
+import PartialAppointment from "@appointments/domain/partial.appointment.domain";
+import AppointmentDomain from "@appointments/domain/appointment.domain";
 
-export interface IEditUserApplication {
-    update(id: string, data: PartialUser): Promise<UserDomain>
+export default interface IEditAppointmentApplication {
+    update(id: string, data: PartialAppointment): Promise<AppointmentDomain>
 }

@@ -1,5 +1,5 @@
-import { UserDomain } from 'src/users/domain/user.domain';
+import AppointmentDomain from '@appointments/domain/appointment.domain';
 
-export interface IGetUserApplication {
-    getById(id: string): Promise<UserDomain>;
+export default interface IGetAppointmentApplication {
+    getById(id: string): Promise<AppointmentDomain>;
 }

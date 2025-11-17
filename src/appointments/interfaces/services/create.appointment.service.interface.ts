@@ -1,5 +1,5 @@
-import { UserDomain } from 'src/users/domain/user.domain';
+import AppointmentDomain from '@appointments/domain/appointment.domain';
 
-export interface ICreateUserService {
-    create(userDomain: UserDomain): Promise<UserDomain>;
+export default interface ICreateAppointmentService {
+    create(userDomain: AppointmentDomain): Promise<AppointmentDomain>;
 }

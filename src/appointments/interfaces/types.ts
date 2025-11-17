@@ -1,16 +1,16 @@
-export const USER_TYPES = {
+export const APPOINTMENT_TYPES = {
     services: {
-        ICreateUserService: 'ICreateUserService',
-        IGetUserService: 'IGetUserService',
-        IGetAllUserService: 'IGetAllUserService',
-        IEditUserService: 'IEditUserService',
-        IDeleteUserService: 'IDeleteUserService'
+        ICreateAppointmentService: 'ICreateAppointmentService',
+        IGetAppointmentService: 'IGetAppointmentService',
+        IGetAllAppointmentService: 'IGetAllAppointmentService',
+        IEditAppointmentService: 'IEditAppointmentService',
+        IDeleteAppointmentService: 'IDeleteAppointmentService'
     },
     applications: {
-        ICreateUserApplication: 'ICreateUserApplication',
-        IGetUserApplication: 'IGetUserApplication',
-        IGetAllUserApplication: 'IGetAllUserApplication',
-        IEditUserApplication: 'IEditUserApplication',
-        IDeleteUserApplication: 'IDeleteUserApplication'
+        ICreateAppointmentApplication: 'ICreateAppointmentApplication',
+        IGetAppointmentApplication: 'IGetAppointmentApplication',
+        IGetAllAppointmentApplication: 'IGetAllAppointmentApplication',
+        IEditAppointmentApplication: 'IEditAppointmentApplication',
+        IDeleteAppointmentApplication: 'IDeleteAppointmentApplication'
     },
 };
