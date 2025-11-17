@@ -1,27 +1,26 @@
-import { Controller, Inject, Post, Res, Body, HttpStatus, UsePipes, Get, Param, ParseUUIDPipe, Patch, Delete } from '@nestjs/common';
-import { DoctorDomain } from '../domain/doctor.domain';
-import { USER_TYPES } from '../interfaces/types';
-import { ICreateUserApplication } from '../interfaces/applications/create.patient.application.interface';
-import { ValidationPipe } from '../../common/validation.pipe';
-import { IGetUserApplication } from '../interfaces/applications/get.patient.application.interface';
-import { IGetAllUserApplication } from '../interfaces/applications/get.all.patient.application.interface';
-import { IEditUserApplication } from '../interfaces/applications/edit.patient.application.interface';
-import { IDeleteUserApplication } from '../interfaces/applications/delete.patient.application.interface';
-import { PartialUser } from '../domain/partial.doctor.domain';
+import { Controller, Inject, Post, Res, Body, HttpStatus, UsePipes, Get, Param, ParseUUIDPipe, Patch, Delete, ValidationPipe } from '@nestjs/common';
+import AppointmentDomain from '@appointments/domain/appointment.domain';
+import USER_TYPES from '@appointments/interfaces/types';
+import ICreateAppointmentApplication from '@appointments/interfaces/applications/create.appointment.application.interface';
+import IGetAppointmentApplication from '@appointments/interfaces/applications/get.appointment.application.interface';
+import IGetAllAppointmentApplication from '@appointments/interfaces/applications/get.all.appointment.application.interface';
+import IEditAppointmentApplication from '@appointments/interfaces/applications/edit.appointment.application.interface';
+import IDeleteAppointmentApplication from '@appointments/interfaces/applications/delete.appointment.application.interface';
+import PartialAppointment from '@appointments/domain/partial.appointment.domain';
 
 @Controller('users')
-export class DoctorController {
+export default class AppointmentController {
     constructor(
-        @Inject(USER_TYPES.applications.ICreateUserApplication) private createUserApp: ICreateUserApplication,
-        @Inject(USER_TYPES.applications.IGetUserApplication) private getUserApp: IGetUserApplication,
-        @Inject(USER_TYPES.applications.IGetAllUserApplication) private getAllUserApp: IGetAllUserApplication,
-        @Inject(USER_TYPES.applications.IEditUserApplication) private editUserApp: IEditUserApplication,
-        @Inject(USER_TYPES.applications.IDeleteUserApplication) private deleteUserApp: IDeleteUserApplication
+        @Inject(USER_TYPES.applications.ICreateAppointmentApplication) private createUserApp: ICreateAppointmentApplication,
+        @Inject(USER_TYPES.applications.IGetAppointmentApplication) private getUserApp: IGetAppointmentApplication,
+        @Inject(USER_TYPES.applications.IGetAllAppointmentApplication) private getAllUserApp: IGetAllAppointmentApplication,
+        @Inject(USER_TYPES.applications.IEditAppointmentApplication) private editUserApp: IEditAppointmentApplication,
+        @Inject(USER_TYPES.applications.IDeleteAppointmentApplication) private deleteUserApp: IDeleteAppointmentApplication
     ) {}
 
     @UsePipes(new ValidationPipe())
     @Post('/create')
-    async create(@Res() res, @Body() userDomain: DoctorDomain) {
+    async create(@Res() res, @Body() userDomain: AppointmentDomain) {
         try {
             const user = await this.createUserApp.create(userDomain);
             return res.status(HttpStatus.OK).json({
@@ -67,7 +66,7 @@ export class DoctorController {
     }
 
     @Patch('/update/:id')
-    async update(@Res() res, @Param('id', new ParseUUIDPipe()) id, @Body() data: PartialUser) {
+    async update(@Res() res, @Param('id', new ParseUUIDPipe()) id, @Body() data: PartialAppointment) {
         try {
             const updatedUser = await this.editUserApp.update(id, data);
             return res.status(HttpStatus.OK).json({
