@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { AppointmentDomain } from 'appointments/domain/appointment.domain';
-import { User } from 'appointments/domain/appointment.entity';
-import { IGetAllUserService } from 'appointments/interfaces/services/get.all.appointment.service.interface';
+import { InjectModel } from '@nestjs/sequelize';
+import AppointmentDomain from '@appointments/domain/appointment.domain';
+import Appointment from '@appointments/domain/appointment.entity';
+import IGetAllAppointmentService from '@appointments/interfaces/services/get.all.appointment.service.interface';
 
 @Injectable()
-export class GetAllDoctorService implements IGetAllUserService {
+export default class GetAllAppointmentService implements IGetAllAppointmentService {
     constructor(
-        @InjectRepository(User) private userRepository: Repository<User>
+        @InjectModel(Appointment) private appointmentRepository: typeof Appointment
     ){}
 
-    async getAll(): Promise<AppointmentDomain[]> {
-        return await this.userRepository.find()
+     getAll(): Promise<AppointmentDomain[]> {
+        return this.appointmentRepository.findAll();
     }
 }

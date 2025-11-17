@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { PartialUser } from 'appointments/domain/partial.appointment.domain';
-import { AppointmentDomain } from 'appointments/domain/appointment.domain';
-import { User } from 'appointments/domain/appointment.entity';
+import { InjectModel } from '@nestjs/sequelize';
+import PartialAppointment from '@appointments/domain/partial.appointment.domain';
+import AppointmentDomain from '@appointments/domain/appointment.domain';
+import Appointment from '@appointments/domain/appointment.entity';
 
 @Injectable()
-export class EditDoctorService {
+export default class EditAppointmentService {
     constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
+        @InjectModel(Appointment) private appointmentsRepository: typeof Appointment,
     ){}
 
-    async update(id: string, data: PartialUser): Promise<AppointmentDomain> {
-        await this.userRepository.update({userId: id}, data)
-        return await this.userRepository.findOne({userId: id})
+  update(id: string, data: PartialAppointment): Promise<AppointmentDomain> {
+      return this.appointmentsRepository.update({userId: id}, data)
     }
 }

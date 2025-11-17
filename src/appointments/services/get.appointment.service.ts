@@ -1,15 +1,14 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from 'appointments/domain/appointment.entity';
-import { AppointmentDomain } from 'appointments/domain/appointment.domain';
-import { IGetUserService } from 'appointments/interfaces/services/get.appointment.service.interface';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import Appointment from '@appointments/domain/appointment.entity';
+import AppointmentDomain from '@appointments/domain/appointment.domain';
+import IGetAppointmentService from '@appointments/interfaces/services/get.appointment.service.interface';
 
 @Injectable()
-export class GetDoctorService implements IGetUserService {
-    constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
+export default class GetAppointmentService implements IGetAppointmentService {
+    constructor(@InjectModel(Appointment) appointmentsRepository: typeof Appointment) {}
 
     async getById(id: string): Promise<AppointmentDomain> {
-        return this.usersRepository.findOne({ userId: id });
+        return this.appointmentsRepository.findOne({ userId: id });
     }
 }
