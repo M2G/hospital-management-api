@@ -1,34 +1,34 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './controller/users.controller';
-import { CreateUserService } from './services/create.user.service';
-import { User } from './domain/user.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CreateUserApplication } from './applications/create.user.application';
-import { USER_TYPES } from './interfaces/types';
-import { GetUserApplication } from './applications/get.user.application';
-import { GetUserService } from './services/get.user.service';
-import { GetAllUserService } from './services/get.all.user.service';
-import { GetAllUserApplication } from './applications/get.all.user.application';
-import { EditUserService } from './services/edit.user.service';
-import { DeleteUserService } from './services/delete.user.service';
-import { EditUserApplication } from './applications/edit.user.application';
-import { DeleteUserApplication } from './applications/delete.user.applicateion';
+import AppointmentController from './controller/appointment.controller';
+import CreateAppointmentService from './services/create.appointment.service';
+import Appointment from './domain/appointment.entity';
+import { SequelizeModule } from '@nestjs/sequelize';
+import CreateAppointmentApplication from './applications/create.appointment.application';
+import { APPOINTMENT_TYPES } from './interfaces/types';
+import GetAppointmentApplication from './applications/get.appointment.application';
+import GetAppointmentService from './services/get.appointment.service';
+import GetAllAppointmentService from './services/get.all.appointment.service';
+import GetAllAppointmentApplication from './applications/get.all.appointment.application';
+import EditAppointmentService from './services/edit.appointment.service';
+import DeleteAppointmentService from './services/delete.appointment.service';
+import EditAppointmentApplication from './applications/edit.appointment.application';
+import DeleteAppointmentApplication from './applications/delete.appointment.application';
 
-const createUserApp = { provide: USER_TYPES.applications.ICreateUserApplication, useClass: CreateUserApplication };
-const getUserApp = { provide: USER_TYPES.applications.IGetUserApplication, useClass: GetUserApplication };
-const getAllUserApp = { provide: USER_TYPES.applications.IGetAllUserApplication, useClass: GetAllUserApplication}
-const editUserApp = { provide: USER_TYPES.applications.IEditUserApplication, useClass: EditUserApplication}
-const deleteUserApp = { provide: USER_TYPES.applications.IDeleteUserApplication, useClass: DeleteUserApplication}
+const createUserApp = { provide: APPOINTMENT_TYPES.applications.ICreateAppointmentApplication, useClass: CreateAppointmentApplication };
+const getUserApp = { provide: APPOINTMENT_TYPES.applications.IGetAppointmentApplication, useClass: GetAppointmentApplication };
+const getAllUserApp = { provide: APPOINTMENT_TYPES.applications.IGetAllAppointmentApplication, useClass: GetAllAppointmentApplication}
+const editUserApp = { provide: APPOINTMENT_TYPES.applications.IEditAppointmentApplication, useClass: EditAppointmentApplication}
+const deleteUserApp = { provide: APPOINTMENT_TYPES.applications.IDeleteAppointmentApplication, useClass: DeleteAppointmentApplication}
 
-const createUserService = { provide: USER_TYPES.services.ICreateUserService, useClass: CreateUserService };
-const getUserService = { provide: USER_TYPES.services.IGetUserService, useClass: GetUserService };
-const getAllUserService = { provide: USER_TYPES.services.IGetAllUserService, useClass: GetAllUserService };
-const editUserService = { provide: USER_TYPES.services.IEditUserService, useClass: EditUserService}
-const deleteUserService = { provide: USER_TYPES.services.IDeleteUserService, useClass: DeleteUserService}
+const createUserService = { provide: APPOINTMENT_TYPES.services.ICreateAppointmentService, useClass: CreateAppointmentService };
+const getUserService = { provide: APPOINTMENT_TYPES.services.IGetAppointmentService, useClass: GetAppointmentService };
+const getAllUserService = { provide: APPOINTMENT_TYPES.services.IGetAllAppointmentService, useClass: GetAllAppointmentService };
+const editUserService = { provide: APPOINTMENT_TYPES.services.IEditAppointmentService, useClass: EditAppointmentService}
+const deleteUserService = { provide: APPOINTMENT_TYPES.services.IDeleteAppointmentService, useClass: DeleteAppointmentService}
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
-  controllers: [UsersController],
+  imports: [SequelizeModule.forFeature([Appointment])],
+  controllers: [AppointmentController],
   providers: [
     createUserApp,
     getUserApp,
