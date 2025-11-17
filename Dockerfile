@@ -20,12 +20,12 @@ RUN apk update && apk upgrade && \
 WORKDIR /app
 
 # Copy package files first for better caching
-COPY package*.json ./
-COPY tsconfig.json ./
+#COPY package*.json ./
+#COPY tsconfig.json ./
 
 # Install dependencies (including dev dependencies for build)
-RUN npm ci --only=production=false && \
-    npm cache clean --force
+#RUN npm ci --only=production=false && \
+#    npm cache clean --force
 
 # Copy source code
 COPY . .
@@ -36,16 +36,4 @@ RUN [ -f .env ] || cp .env.example .env || echo "# Environment variables" > .env
 # Install dependencies
 RUN npm install
 
-FROM node:24.2.0-alpine3.21 as app
-
-## Copy built node modules and binaries without including the toolchain
-COPY --from=build /app .
-
-WORKDIR /app
-
 CMD [ "/app/scripts/run.sh" ]
-
-# Remove dev dependencies and clean up
-RUN #npm prune --production && \
-    npm cache clean --force && \
-    apk del .build-deps
