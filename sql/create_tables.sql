@@ -1,18 +1,34 @@
-DROP TABLE IF EXISTS users;
+CREATE DATABASE test_db;
 
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(255),
-  -- https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
-  email VARCHAR(254) NOT NULL,
-  first_name VARCHAR(255),
-  last_name VARCHAR(255),
-  password VARCHAR(255) NOT NULL,
-  created_at timestamp without time zone NOT NULL DEFAULT statement_timestamp(),
-  modified_at timestamp without time zone NOT NULL DEFAULT statement_timestamp(),
-  reset_password_token TEXT,
-  reset_password_expires timestamp without time zone NOT NULL DEFAULT statement_timestamp(),
-  deleted_at INTEGER DEFAULT 0,
-  last_connected_at INTEGER DEFAULT 0,
-  UNIQUE (email)
-);
+CREATE TYPE status AS ENUM('Scheduled', 'Completed', 'Cancelled');
+
+CREATE TYPE gender AS ENUM('Male', 'Female');
+
+CREATE TABLE IF NOT EXISTS Doctors (
+    doctorId SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    specialization VARCHAR(100),
+    contactNumber VARCHAR(15),
+    email VARCHAR(100)
+    );
+
+CREATE TABLE IF NOT EXISTS Patients (
+    patientId SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    gender GENDER NOT NULL,
+    dateOfBirth DATE,
+    contactNumber VARCHAR(15),
+    address VARCHAR(255),
+    medicalHistory TEXT
+    );
+
+CREATE TABLE IF NOT EXISTS Appointments (
+    appointmentId SERIAL PRIMARY KEY,
+    patientId INT,
+    doctorId INT,
+    appointmentDate DATE,
+    appointmentTime TIME,
+    status STATUS NOT NULL,
+    FOREIGN KEY (patientId) REFERENCES Patients (patientId),
+    FOREIGN KEY (doctorId) REFERENCES Doctors (doctorId)
+    );
