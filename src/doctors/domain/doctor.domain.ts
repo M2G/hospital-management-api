@@ -1,6 +1,6 @@
 import { IsString, IsEmail } from 'class-validator';
 
-export class PatientDomain {
+export default class DoctorDomain {
     @IsString()
     readonly fullName: string;
 

@@ -1,7 +1,7 @@
 import { IsString, IsEmail } from 'class-validator';
-import { PatientDomain } from './patient.domain';
+import DoctorDomain from './doctor.domain';
 
-export class PartialUser implements PartialUser {
+export default class PartialDoctor implements DoctorDomain {
     @IsString()
     readonly fullName: string;
 
