@@ -1,16 +1,16 @@
-export const USER_TYPES = {
+export const DOCTOR_TYPES = {
     services: {
-        ICreateUserService: 'ICreateUserService',
-        IGetUserService: 'IGetUserService',
-        IGetAllUserService: 'IGetAllUserService',
-        IEditUserService: 'IEditUserService',
-        IDeleteUserService: 'IDeleteUserService'
+        ICreateDoctorService: 'ICreateDoctorService',
+        IGetDoctorService: 'IGetDoctorService',
+        IGetAllDoctorService: 'IGetAllDoctorService',
+        IEditDoctorService: 'IEditDoctorService',
+        IDeleteDoctorService: 'IDeleteDoctorService'
     },
     applications: {
-        ICreateUserApplication: 'ICreateUserApplication',
-        IGetUserApplication: 'IGetUserApplication',
-        IGetAllUserApplication: 'IGetAllUserApplication',
-        IEditUserApplication: 'IEditUserApplication',
-        IDeleteUserApplication: 'IDeleteUserApplication'
+        ICreateDoctorApplication: 'ICreateDoctorApplication',
+        IGetDoctorApplication: 'IGetDoctorApplication',
+        IGetAllDoctorApplication: 'IGetAllDoctorApplication',
+        IEditDoctorApplication: 'IEditDoctorApplication',
+        IDeleteDoctorApplication: 'IDeleteDoctorApplication'
     },
 };
