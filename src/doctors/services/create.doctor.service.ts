@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../domain/patient.entity';
-import { PatientDomain } from '../domain/patient.domain';
-import { ICreateUserService } from '../interfaces/services/create.patient.service.interface';
+import { User } from '@doctors/domain/doctor.entity';
+import { DoctorDomain } from '@doctors/domain/doctor.domain';
+import { ICreateUserService } from '@doctors/interfaces/services/create.doctor.service.interface';
 
 @Injectable()
-export class CreateUserService implements ICreateUserService {
+export class CreateDoctorService implements ICreateUserService {
     constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
 
-    async create(user: PatientDomain): Promise<PatientDomain> {
+    async create(user: DoctorDomain): Promise<DoctorDomain> {
         return this.usersRepository.save(user);
     }
 }

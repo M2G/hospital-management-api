@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../domain/patient.entity';
+import { InjectModel } from '@nestjs/sequelize';
+import Domain from '@doctors/domain/doctor.entity';
 
 @Injectable()
-export class DeleteUserService {
+export default class DeleteDoctorService {
 
     constructor(
-        @InjectRepository(User) private userRepository: Repository<User>
+        @InjectModel(Domain) private userRepository: typeof Domain
     ){}
 
     async remove(id: string): Promise<{deleted: boolean}> {
