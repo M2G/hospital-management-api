@@ -1,29 +1,28 @@
-import { Controller, Inject, Post, Res, Body, HttpStatus, UsePipes, Get, Param, ParseUUIDPipe, Patch, Delete } from '@nestjs/common';
-import { PatientDomain } from '../domain/patient.domain';
-import { USER_TYPES } from '../interfaces/types';
-import { ICreateUserApplication } from '../interfaces/applications/create.patient.application.interface';
-import { ValidationPipe } from '../../common/validation.pipe';
-import { IGetUserApplication } from '../interfaces/applications/get.patient.application.interface';
-import { IGetAllUserApplication } from '../interfaces/applications/get.all.patient.application.interface';
-import { IEditUserApplication } from '../interfaces/applications/edit.patient.application.interface';
-import { IDeleteUserApplication } from '../interfaces/applications/delete.patient.application.interface';
-import { PartialUser } from '../domain/partial.patient.domain';
+import { Controller, Inject, Post, Res, Body, HttpStatus, UsePipes, Get, Param, ParseUUIDPipe, Patch, Delete, ValidationPipe } from '@nestjs/common';
+import DoctorDomain from '@doctors/domain/doctor.domain';
+import { DOCTOR_TYPES } from '@doctors/interfaces/types';
+import  ICreateDoctorApplication  from '@doctors/interfaces/applications/create.doctor.application.interface';
+import  IGetDoctorApplication  from '@doctors/interfaces/applications/get.doctor.application.interface';
+import  IGetAllDoctorApplication  from '@doctors/interfaces/applications/get.all.doctor.application.interface';
+import  IEditDoctorApplication  from '@doctors/interfaces/applications/edit.doctor.application.interface';
+import  IDeleteDoctorApplication  from '@doctors/interfaces/applications/delete.doctor.application.interface';
+import  PartialUser  from '@doctors/domain/partial.doctor.domain';
 
 @Controller('users')
-export class PatientController {
+export default class DoctorController {
     constructor(
-        @Inject(USER_TYPES.applications.ICreateUserApplication) private createUserApp: ICreateUserApplication,
-        @Inject(USER_TYPES.applications.IGetUserApplication) private getUserApp: IGetUserApplication,
-        @Inject(USER_TYPES.applications.IGetAllUserApplication) private getAllUserApp: IGetAllUserApplication,
-        @Inject(USER_TYPES.applications.IEditUserApplication) private editUserApp: IEditUserApplication,
-        @Inject(USER_TYPES.applications.IDeleteUserApplication) private deleteUserApp: IDeleteUserApplication
+        @Inject(DOCTOR_TYPES.applications.ICreateDoctorApplication) private createUserApp: ICreateDoctorApplication,
+        @Inject(DOCTOR_TYPES.applications.IGetDoctorApplication) private getUserApp: IGetDoctorApplication,
+        @Inject(DOCTOR_TYPES.applications.IGetAllDoctorApplication) private getAllUserApp: IGetAllDoctorApplication,
+        @Inject(DOCTOR_TYPES.applications.IEditDoctorApplication) private editUserApp: IEditDoctorApplication,
+        @Inject(DOCTOR_TYPES.applications.IDeleteDoctorApplication) private deleteUserApp: IDeleteDoctorApplication
     ) {}
 
     @UsePipes(new ValidationPipe())
     @Post('/create')
-    async create(@Res() res, @Body() userDomain: PatientDomain) {
+    async create(@Res() res, @Body() doctorDomain: DoctorDomain) {
         try {
-            const user = await this.createUserApp.create(userDomain);
+            const user = await this.createUserApp.create(doctorDomain);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.CREATED,
                 message: `${user.fullName} successfully created`
