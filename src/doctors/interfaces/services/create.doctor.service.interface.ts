@@ -1,5 +1,5 @@
-import { UserDomain } from 'src/users/domain/user.domain';
+import DoctorDomain from '@doctors/domain/doctor.domain';
 
-export interface ICreateUserService {
-    create(userDomain: UserDomain): Promise<UserDomain>;
+export default interface ICreateDoctorService {
+    create(userDomain: DoctorDomain): Promise<DoctorDomain>;
 }

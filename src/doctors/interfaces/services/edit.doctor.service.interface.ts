@@ -1,6 +1,6 @@
-import { PartialUser } from "src/users/domain/partial.user.domain";
-import { UserDomain } from "src/users/domain/user.domain";
+import PartialDoctor from "@doctors/domain/partial.doctor.domain";
+import DoctorDomain from '@doctors/domain/doctor.domain';
 
-export interface IEditUserService {
-    update(id: string, data: PartialUser): Promise<UserDomain>
+export default interface IEditUserService {
+    update(id: string, data: PartialDoctor): Promise<DoctorDomain>
 }

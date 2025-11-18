@@ -1,5 +1,5 @@
-import { UserDomain } from 'src/users/domain/user.domain';
+import DoctorDomain from '@doctors/domain/doctor.domain';
 
-export interface IGetUserService {
-    getById(id: string): Promise<UserDomain>;
+export default interface IGetDoctorService {
+    getById(id: string): Promise<DoctorDomain>;
 }
