@@ -6,7 +6,7 @@ import IGetAppointmentService from '@appointments/interfaces/services/get.appoin
 
 @Injectable()
 export default class GetAppointmentService implements IGetAppointmentService {
-    constructor(@InjectModel(Appointment) appointmentsRepository: typeof Appointment) {}
+    constructor(@InjectModel(Appointment) private appointmentsRepository: typeof Appointment) {}
 
     async getById(id: string): Promise<AppointmentDomain> {
         return this.appointmentsRepository.findOne({ userId: id });
