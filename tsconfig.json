@@ -14,13 +14,10 @@
     "incremental": true,
     "skipLibCheck": true,
     "paths": {
-      "@config": ["config"],
-      "@config2": ["src/config2"],
-      "@constants": ["src/constants"],
-      "@domain/*": ["src/domain/*"],
-      "@application/*": ["src/application/*"],
-      "@infrastructure/*": ["src/infrastructure/*"],
-      "@encryption": ["src/encryption"],
+      "@patient/*": ["./src/patient/*"],
+      "@doctors/*": ["./src/doctors/*"],
+      "@appointments/*": ["./src/appointments/*"],
+      "@common/*": ["./src/common/*"]
     },
   },
   "include": ["./.eslintrc.js", "src/**/**/*.ts", "tests/**/**/*.ts"],

@@ -35,18 +35,9 @@
     "rootDirs": ["./src", "./tests"],
     "baseUrl": ".",
     "paths": {
-      "./*": ["./src/*"],
-      "src/*": ["./src/*"],
-      "app/*": ["./src/app/*"],
-      "core/*": ["./src/core/*"],
-      "domain/*": ["./src/domain/*"],
-      "generated/*": ["./src/generated/*"],
-      "infra/*": ["./src/infra/*"],
-      "interfaces/*": ["./src/interfaces/*"],
-      "types/*": ["./src/types/*"],
-      "schema/*": ["./src/interfaces/schema-definition/*"],
-      "services/*": ["./src/services/*"],
-
+      "@patient/*": ["./src/patient/*"],
+      "@doctors/*": ["./src/doctors/*"],
+      "@appointments/*": ["./src/appointments/*"]
     }
   },
   "include": ["src/**/*"],
