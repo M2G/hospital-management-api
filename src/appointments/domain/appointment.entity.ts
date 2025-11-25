@@ -1,37 +1,22 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, Model, Table } from 'sequelize-typescript';
 
-@Table({ tableName: 'users', timestamps: false })
+@Table({ tableName: 'appointment', timestamps: false })
 export default class Appointment extends Model {
   @Column({ autoIncrement: true, primaryKey: true })
-  id: number;
+  appointmentId: number;
 
   @Column
-  email: string;
+  patientId: string;
 
   @Column
-  first_name: string;
+  doctorId: string;
 
   @Column
-  last_name: string;
+  appointmentDate: Date;
 
   @Column
-  password: string;
+  appointmentTime: number;
 
   @Column
-  created_at: Date;
-
-  @Column
-  deleted_at: number;
-
-  @Column
-  modified_at: Date;
-
-  @Column
-  last_connected_at: number;
-
-  @Column
-  reset_password_expires: string;
-
-  @Column({ type: DataType.STRING })
-  reset_password_token?: string | null;
+  status: string;
 }

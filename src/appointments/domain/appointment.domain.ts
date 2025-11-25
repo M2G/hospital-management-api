@@ -1,12 +1,21 @@
-import { IsString, IsEmail } from 'class-validator';
+import { IsString, IsNumber, IsDate } from 'class-validator';
 
 export default class AppointmentDomain {
-    @IsString()
-    readonly fullName: string;
+  @IsNumber()
+  appointmentId: number;
 
-    @IsString()
-    readonly password: string;
+  @IsString()
+  patientId: string;
 
-    @IsEmail()
-    readonly email: string;
+  @IsString()
+  doctorId: string;
+
+  @IsDate()
+  appointmentDate: Date;
+
+  @IsNumber()
+  appointmentTime: number;
+
+  @IsString()
+  status: string;
 }
