@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Repository } from "sequelize-typescript";
 import PartialAppointment from '@appointments/domain/partial.appointment.domain';
 import AppointmentDomain from '@appointments/domain/appointment.domain';
 import Appointment from '@appointments/domain/appointment.entity';
@@ -7,10 +8,11 @@ import Appointment from '@appointments/domain/appointment.entity';
 @Injectable()
 export default class EditAppointmentService {
     constructor(
-        @InjectModel(Appointment) private appointmentsRepository: typeof Appointment,
+        @InjectModel(Appointment) private appointmentsRepository: Repository<Appointment>,
     ){}
 
   update(id: string, data: PartialAppointment): Promise<AppointmentDomain> {
+    // @ts-ignore
       return this.appointmentsRepository.update({userId: id}, data)
     }
 }

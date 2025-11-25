@@ -10,6 +10,6 @@ export default class DeleteAppointmentService {
     ){}
 
     async remove(id: string): Promise<any> {
-      return this.appointmentsRepository.remove({userId: id})
+      return this.appointmentsRepository.destroy({ where: { id } })
     }
 }
