@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import IDeleteAppointmentApplication from "@appointments/interfaces/applications/delete.appointment.application.interface";
 import IDeleteAppointmentService from "@appointments/interfaces/services/delete.appointment.service.interface";
-import { APPOINTMENT_TYPES } from "@appointments/interfaces/types";
+import APPOINTMENT_TYPES from "@appointments/interfaces/types";
 
 @Injectable()
 export default class DeleteUserApplication implements IDeleteAppointmentApplication {
@@ -9,7 +9,7 @@ export default class DeleteUserApplication implements IDeleteAppointmentApplicat
         @Inject(APPOINTMENT_TYPES.services.IDeleteAppointmentService) private userService: IDeleteAppointmentService
     ){}
 
-    async remove(id: string): Promise<{deleted: boolean}> {
-        return await this.userService.remove(id)
+     remove(id: string): Promise<{deleted: boolean}> {
+        return this.userService.remove(id)
     }
 }

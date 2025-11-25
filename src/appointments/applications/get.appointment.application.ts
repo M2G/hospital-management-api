@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import AppointmentDomain from '@appointments/domain/appointment.domain';
-import { APPOINTMENT_TYPES } from '@appointments/interfaces/types';
+import APPOINTMENT_TYPES from '@appointments/interfaces/types';
 import IGetAppointmentApplication from '@appointments/interfaces/applications/get.appointment.application.interface';
 import IGetAppointmentService from '@appointments/interfaces/services/get.appointment.service.interface';
 
