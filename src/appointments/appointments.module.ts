@@ -4,7 +4,7 @@ import CreateAppointmentService from './services/create.appointment.service';
 import Appointment from './domain/appointment.entity';
 import { SequelizeModule } from '@nestjs/sequelize';
 import CreateAppointmentApplication from './applications/create.appointment.application';
-import { APPOINTMENT_TYPES } from './interfaces/types';
+import APPOINTMENT_TYPES from './interfaces/types';
 import GetAppointmentApplication from './applications/get.appointment.application';
 import GetAppointmentService from './services/get.appointment.service';
 import GetAllAppointmentService from './services/get.all.appointment.service';
@@ -42,4 +42,4 @@ const deleteUserService = { provide: APPOINTMENT_TYPES.services.IDeleteAppointme
     deleteUserService
   ],
 })
-export class UsersModule {}
+export default class AppointmentModule {}
