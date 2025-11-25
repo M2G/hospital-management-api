@@ -1,4 +1,4 @@
-export const APPOINTMENT_TYPES = {
+const APPOINTMENT_TYPES = {
     services: {
         ICreateAppointmentService: 'ICreateAppointmentService',
         IGetAppointmentService: 'IGetAppointmentService',
@@ -14,3 +14,5 @@ export const APPOINTMENT_TYPES = {
         IDeleteAppointmentApplication: 'IDeleteAppointmentApplication'
     },
 };
+
+export default APPOINTMENT_TYPES;
