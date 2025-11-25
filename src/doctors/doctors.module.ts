@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import DoctorsController from './controller/doctor.controller';
-import { CreateDoctorService } from './services/create.doctor.service';
+import CreateDoctorService from './services/create.doctor.service';
 import Doctor from './domain/doctor.entity';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { CreateDoctorApplication } from './applications/create.doctor.application';
@@ -42,4 +42,4 @@ const deleteUserService = { provide: DOCTOR_TYPES.services.IDeleteDoctorService,
     deleteUserService
   ],
 })
-export class UsersModule {}
+export default class DoctorsModule {}
