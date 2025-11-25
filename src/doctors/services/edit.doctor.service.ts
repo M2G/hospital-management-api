@@ -10,8 +10,8 @@ export default class EditDoctorService {
         @InjectModel(Doctor) private doctorRepository: typeof Doctor,
     ){}
 
-    async update(id: string, data: PartialDoctor): Promise<DoctorDomain> {
-        await this.doctorRepository.update({userId: id}, data)
+    async update(id: string, data: PartialDoctor): Promise<any> {
+        await this.doctorRepository.update({userId: id}, data as any)
        // return await this.userRepository.findOne({userId: id})
     }
 }

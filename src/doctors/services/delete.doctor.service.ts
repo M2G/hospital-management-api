@@ -6,11 +6,11 @@ import Domain from '@doctors/domain/doctor.entity';
 export default class DeleteDoctorService {
 
     constructor(
-        @InjectModel(Domain) private userRepository: typeof Domain
+        @InjectModel(Domain) private doctorRepository: typeof Domain
     ){}
 
     async remove(id: string): Promise<{deleted: boolean}> {
-        await this.userRepository.delete({userId: id})
+        await this.doctorRepository.remove({userId: id})
         return {deleted: true}
     }
 }
